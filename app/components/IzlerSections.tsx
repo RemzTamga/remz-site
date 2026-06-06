@@ -492,7 +492,7 @@ group-hover:opacity-[0.24]"
 >
   
 
-    {coverings[selectedCovering as keyof typeof coverings].map((item, index) => (
+    {coverings[selectedCovering as keyof typeof coverings].map((item: any, index: number) => (
 
   <div
     key={item.image}
