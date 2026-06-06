@@ -1,0 +1,1009 @@
+{\rtf1\ansi\ansicpg1254\deff0\nouicompat\deflang1055{\fonttbl{\f0\fnil\fcharset0 Calibri;}{\f1\fnil\fcharset238 Calibri;}{\f2\fnil Calibri;}}
+{\*\generator Riched20 10.0.19041}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang31 "use client"\par
+\par
+import \{ useEffect, useRef, useState \} from "react"\par
+\par
+export default function RemzLandingPage() \{\par
+\par
+const audioRef = useRef<HTMLAudioElement>(null)\par
+\par
+const [zoomed, setZoomed] = useState(false)\par
+const [selectedImage, setSelectedImage] = useState("/product-1.png")\par
+const [secretOpen, setSecretOpen] = useState(false)\par
+const [loading, setLoading] = useState(true)\par
+const artifacts: Record<string, \{\par
+  category: string\par
+  title: string\par
+  lore: string\par
+  code: string\par
+\}> = \{\par
+  "/archive-1.png": \{\par
+    category: "garments",\par
+    title: "Sessiz M\'fch\'fcr",\par
+    lore: "Kadim y\'fczeylerde saklanan k\f1\u305?r\u305?k bir iz.",\par
+    code: "Fragment 001"\par
+  \},\par
+\par
+  "/archive-2.png": \{\par
+    category: "garments",\par
+    title: "Ta\'ba Haf\u305?zas\u305?",\par
+    lore: "Ta\'ba\u305?n i\f0\lang1033\'e7inde ya\f1\'baayan unutulmu\'ba yank\u305?lar.",\par
+    code: "Fragment 002"\par
+  \},\par
+\par
+  "/archive-3.png": \{\par
+    category: "garments",\par
+    title: "Kay\u305?p Katman",\par
+    lore: "Derin y\f0\'fczeylerde saklanan sessiz bir iz.",\par
+    code: "Fragment 003"\par
+  \},\par
+\par
+  "/archive-4.png": \{\par
+    category: "garments",\par
+    title: "Karanl\f1\u305?k \u304?z",\par
+    lore: "G\f0\'f6lgelerin alt\f1\u305?nda m\f0\'fch\'fcrlenmi\f1\'ba bir katman.",\par
+    code: "Fragment 004"\par
+  \},\par
+\par
+  "/archive-5.png": \{\par
+    category: "garments",\par
+    title: "\f0\'c7atlak Geometri",\par
+    lore: "K\f1\u305?r\u305?lm\u305?\'ba ta\'ba d\f0\'fczenlerinde ya\f1\'baayan \'baekiller.",\par
+    code: "Fragment 005"\par
+  \},\par
+\par
+  "/archive-6.png": \{\par
+    category: "garments",\par
+    title: "K\f0\'fcllerin Alt\f1\u305?nda",\par
+    lore: "Sessizli\u287?e g\f0\'f6m\'fclm\'fc\f1\'ba kadim y\f0\'fczeyler.",\par
+    code: "Fragment 006"\par
+  \},\par
+\par
+  "/archive-7.png": \{\par
+    category: "garments",\par
+    title: "Zaman\f1\u305?n Perdesi",\par
+    lore: "Kadim ge\f0\'e7mi\f1\'bae a\f0\'e7\f1\u305?lan sessiz bir ge\f0\'e7it.",\par
+    code: "Fragment 007"\par
+  \},\par
+\par
+  "/archive-8.png": \{\par
+    category: "garments",\par
+    title: "G\'f6lgeli Yaz\f1\u305?t",\par
+    lore: "Silinmi\'ba sembollerin geride b\u305?rakt\u305?\u287?\u305? izler.",\par
+    code: "Fragment 008"\par
+  \},\par
+\par
+  "/archive-9.png": \{\par
+    category: "garments",\par
+    title: "K\u305?r\u305?k M\f0\'fch\'fcr",\par
+    lore: "Par\'e7alanm\f1\u305?\'ba y\f0\'fczeylerde ya\f1\'baayan eski bir i\'baaret.",\par
+    code: "Fragment 009"\par
+  \},\par
+\par
+  "/archive-10.png": \{\par
+    category: "garments",\par
+    title: "Derin Katman",\par
+    lore: "Ta\'ba\u305?n alt\u305?nda saklanan sessiz a\u287?\u305?rl\u305?k.",\par
+    code: "Fragment 010"\par
+  \},\par
+\par
+  "/archive-11.png": \{\par
+    category: "garments",\par
+    title: "Sessiz Ta\'balar",\par
+    lore: "Unutulmu\'ba y\f0\'fczeylerde yank\f1\u305?lanan sessizlik.",\par
+    code: "Fragment 011"\par
+  \}\par
+\}\par
+useEffect(() => \{\par
+  const handleEscape = (e: KeyboardEvent) => \{\par
+    if (e.key === "Escape") \{\par
+      setZoomed(false)\par
+      setSecretOpen(false)\par
+    \}\par
+  \}\par
+\par
+  window.addEventListener("keydown", handleEscape)\par
+\par
+  return () => \{\par
+    window.removeEventListener("keydown", handleEscape)\par
+  \}\par
+\}, [])\par
+const archiveRef = useRef<HTMLDivElement>(null)\par
+const zoomArchiveRef = useRef<HTMLDivElement>(null)\par
+\par
+useEffect(() => \{\par
+  const archive = zoomArchiveRef.current\par
+\par
+  if (!archive) return\par
+\par
+  const handleWheel = (e: WheelEvent) => \{\par
+  if (window.innerWidth < 768) return\par
+\par
+  e.preventDefault()\par
+  archive.scrollLeft += e.deltaY\par
+\}\par
+\par
+  archive.addEventListener("wheel", handleWheel, \{ passive: false \})\par
+\par
+  return () => \{\par
+    archive.removeEventListener("wheel", handleWheel)\par
+  \}\par
+\}, [zoomed])\par
+\par
+useEffect(() => \{\par
+  const playAudio = async () => \{\par
+    try \{\par
+      if (audioRef.current) \{\par
+        audioRef.current.volume = 0.07\par
+        await audioRef.current.play()\par
+      \}\par
+    \} catch (err) \{\par
+      console.log("Autoplay blocked")\par
+    \}\par
+  \}\par
+\par
+  playAudio()\par
+\}, [])\par
+\par
+useEffect(() => \{\par
+  const timer = setTimeout(() => \{\par
+    setLoading(false)\par
+  \}, 1400)\par
+\par
+  return () => clearTimeout(timer)\par
+\}, [])\par
+\par
+return (\par
+  <>\par
+\par
+    \{loading && !zoomed && !secretOpen && (\par
+  <div\par
+  style=\{\{ WebkitTransform: "translateZ(0)" \}\}\par
+  className="hidden md:flex fixed inset-0 z-[9999] bg-black items-center justify-center overflow-hidden"\par
+>\par
+        <video\par
+  autoPlay\par
+  muted\par
+  loop\par
+  playsInline\par
+  className="hidden md:block absolute inset-0 w-full h-full object-cover opacity-20"\par
+>\par
+          <source src="/sis.webm" type="video/webm" />\par
+        </video>\par
+\par
+        <div className="relative flex flex-col items-center">\par
+\par
+  <img\par
+    src="/remz-seal.png"\par
+    alt="REMZ Seal"\par
+    className="w-[120px] opacity-70"\par
+  />\par
+  <div className="mt-5 text-[#8b7a67] tracking-[0.55em] uppercase text-[18px] opacity-80">\par
+  REMZ\par
+</div>\par
+\par
+  <div className="mt-6 w-[120px] h-[1px] bg-[#3a3128]"></div>\par
+\par
+</div>\par
+\par
+      </div>\par
+    )\}\par
+\par
+    <div\par
+  className="min-h-screen text-[#d1d1d1] overflow-hidden relative bg-black"\par
+  \par
+>\par
+\par
+<audio ref=\{audioRef\} loop hidden>\par
+  <source src="/ambient.mp3" type="audio/mpeg" />\par
+</audio>\par
+\par
+      \{/* Hero Background Image */\}\par
+<div\par
+  \par
+  className="absolute inset-0 bg-cover bg-center opacity-30 scale-[1.08] transition-all duration-[4000ms] pointer-events-none"\par
+  style=\{\{\par
+    backgroundImage: "url('/hero-bg.png')",\par
+  \}\}\par
+></div>\par
+\par
+\{/* Moving Light */\}\par
+<div className="absolute inset-0 overflow-hidden">\par
+\par
+  <div\par
+    className="absolute -left-[10%] top-0 h-full w-[50%]\par
+    bg-gradient-to-r from-transparent via-orange-200/20 to-transparent\par
+    rotate-12 blur-2xl animate-pulse"\par
+  ></div>\par
+\par
+</div>\par
+\{/* Atmospheric Gradient */\}\par
+<video\par
+  autoPlay\par
+  muted\par
+  loop\par
+  playsInline\par
+  className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"\par
+  style=\{\{ mixBlendMode: "screen" \}\}\par
+>\par
+  <source src="/sis.webm" type="video/webm" />\par
+</video>\par
+<div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black/95 pointer-events-none"></div>\par
+\par
+\par
+\{/* Hero Section */\}\par
+<section className="relative z-10 min-h-[70vh] flex flex-col items-start justify-center px-10 md:px-24 text-left">\par
+\par
+\par
+        <div className="mb-10 tracking-[0.38em] uppercase text-[22px] text-[#8b7a67] opacity-70 blur-[0.3px]">\par
+  REMZ\par
+</div>\par
+\par
+        <img\par
+          src="/hero-title.png"\par
+          alt="\f0\'c7a\f1\u287?lar\u305? Delen Kadim Bir Ruh"\par
+          className="max-w-[760px] w-full opacity-95"\par
+        />\par
+\par
+        <p className="mt-16 max-w-xl text-[#8a8178] text-base md:text-[19px] leading-relaxed tracking-[0.06em] font-light">\par
+          Kadim S\u305?rlar\u305?n Sessizli\u287?i.\par
+        </p>\par
+\par
+        <div className="mt-14 flex items-center gap-6">\par
+\par
+          <button className="border border-[#2a2a2a] bg-black/20 backdrop-blur-sm px-10 py-5 uppercase tracking-[0.32em] text-[11px] text-[#b1a08d] hover:bg-[#111111] hover:border-[#4a4036] transition-all duration-700">\par
+            Ke\'bafet\par
+          </button>\par
+\par
+          <button className="text-[#6e6e6e] uppercase tracking-[0.25em] text-xs hover:text-[#b8b8b8] transition-all duration-500">\par
+            Ar\'baiv\par
+          </button>\par
+\par
+        </div>\par
+\par
+      </section>\par
+\par
+\{/* Featured Artifact */\}\par
+\par
+<section className="relative z-10 min-h-[55vh] flex items-center px-10 md:px-24 py-10">\par
+\par
+  <div className="grid md:grid-cols-2 gap-20 items-center w-full">\par
+\par
+    \{/* Product Image */\}\par
+    <div className="relative overflow-hidden rounded-[28px]">\par
+\par
+  <img\par
+    src=\{selectedImage\}\par
+    alt="REMZ Artifact"\par
+    onClick=\{() => setZoomed(true)\}\par
+    className="w-full max-w-[820px] opacity-95 cursor-zoom-in hover:scale-[1.015] transition-all duration-700 mix-blend-lighten"\par
+  />\par
+\par
+</div>\par
+\par
+    \{/* Product Content */\}\par
+    <div className="max-w-xl">\par
+\par
+      <div className="uppercase tracking-[0.45em] text-[11px] text-[#6f655c] mb-8">\par
+        Featured Artifact\par
+      </div>\par
+\par
+      <h2 className="text-[42px] md:text-[68px] leading-[0.95] text-[#d6d0c7]">\par
+        Ta\'balar\u305?n\par
+        Hat\u305?rlad\u305?\u287?\u305?\par
+        Bir Sessizlik\par
+      </h2>\par
+\par
+      <p className="mt-10 text-[#81786f] leading-relaxed text-[15px] md:text-[18px]">\par
+        Kadim y\f0\'fczeylerden do\f1\u287?an a\u287?\u305?r bir iz.\par
+        Sessizli\u287?in i\f0\'e7inde ya\f1\'baayan bir m\f0\'fch\'fcr.\par
+      </p>\par
+\par
+      <div className="mt-14 flex items-center gap-8">\par
+\par
+        <button className="border border-[#2a2a2a] bg-black/20 backdrop-blur-sm px-10 py-5 uppercase tracking-[0.32em] text-[11px] text-[#b1a08d] hover:bg-[#111111] hover:border-[#4a4036] transition-all duration-700">\par
+          \f1\u304?ncele\par
+        </button>\par
+\par
+        <div className="text-[#5e564e] uppercase tracking-[0.3em] text-[11px]">\par
+          Archive 001\par
+        </div>\par
+\par
+      </div>\par
+\par
+    </div>\par
+\par
+  </div>\par
+\par
+</section>\par
+\par
+\{/* Archive Grid */\}\par
+\par
+<section className="relative z-20 px-10 md:px-24 pb-16">\par
+\par
+  <div className="mb-8">\par
+\par
+    <div className="uppercase tracking-[0.42em] text-[11px] text-[#6f655c] mb-6">\par
+      Archive Fragments\par
+    </div>\par
+\par
+    <h3 className="text-[26px] md:text-[40px] leading-[1.05] text-[#8b7a67] max-w-2xl">\par
+      Sessizce Korunan\par
+      Kadim \u304?zler\par
+    </h3>\par
+\par
+  </div>\par
+\par
+  <div\par
+  ref=\{archiveRef\}\par
+  className="flex gap-10 overflow-x-auto snap-x snap-mandatory pb-4 no-scrollbar"\par
+>\par
+\par
+    \{/* Item 1 */\}\par
+    <div className="group flex-shrink-0 w-[260px] relative">\par
+\par
+      <div className="overflow-hidden rounded-[24px]  transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+<div\par
+  className="absolute bottom-[-28px] left-1/2 -translate-x-1/2\par
+w-[82%] h-[60px]\par
+bg-[#8f6a3b]\par
+opacity-[0.16]\par
+blur-[55px]\par
+rounded-full\par
+pointer-events-none\par
+z-0\par
+transition-all duration-700\par
+group-hover:opacity-[0.24]"\par
+></div>\par
+\par
+        <img\par
+          src="/archive-1.png"\par
+          onClick=\{() => \{\par
+  setZoomed(false)\par
+setLoading(true)\par
+\par
+setTimeout(() => \{\par
+  setSelectedImage("/archive-1.png")\par
+\}, 900)\par
+\par
+setTimeout(() => \{\par
+  setLoading(false)\par
+  setZoomed(true)\par
+\}, 1600)\par
+\}\}\par
+          alt="Archive 1"\par
+          className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+        />\par
+\par
+      </div>\par
+\par
+      <div className="mt-6 flex flex-col items-center">\par
+\par
+        <div>\par
+          <div className="text-[#d2cbc2] text-[15px]">\par
+            Sessiz M\f0\'fch\'fcr\par
+          </div>\par
+\par
+          <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+            REMZ Archive\par
+          </div>\par
+        </div>\par
+\par
+      </div>\par
+\par
+    </div>\par
+\par
+    \{/* Item 2 */\}\par
+    <div className="group flex-shrink-0 w-[260px]">\par
+      <div className="relative z-10 overflow-hidden rounded-[24px] transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+        <img\par
+          src="/archive-2.png"\par
+          onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-2.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+          alt="Archive 2"\par
+          className="w-full transition-all duration-700 group-hover:scale-110 group-hover:brightness-110"\par
+        />\par
+\par
+      </div>\par
+\par
+      <div className="mt-6 flex flex-col items-center">\par
+\par
+        <div>\par
+          <div className="text-[#d2cbc2] text-[15px]">\par
+            Ta\f1\'ba Haf\u305?zas\u305?\par
+          </div>\par
+\par
+          <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+            REMZ Archive\par
+          </div>\par
+        </div>\par
+\par
+      </div>\par
+\par
+    </div>\par
+\par
+    \{/* Item 3 */\}\par
+    <div className="group flex-shrink-0 w-[260px]">\par
+\par
+      <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+        <img\par
+          src="/archive-3.png"\par
+          onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-3.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+          alt="Archive 3"\par
+          className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+        />\par
+\par
+      </div>\par
+\par
+      <div className="mt-6 flex flex-col items-center">\par
+\par
+        <div>\par
+          <div className="text-[#d2cbc2] text-[15px]">\par
+            Kay\u305?p Katman\par
+          </div>\par
+\par
+          <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+            REMZ Archive\par
+          </div>\par
+        </div>\par
+\par
+      </div>\par
+\par
+    </div>\par
+\par
+ \{/* Item 4 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-4.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-4.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 4"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      Karanl\u305?k \u304?z\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+ \{/* Item 5 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-5.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-5.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 5"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      Kay\u305?p Geometri\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+\{/* Item 6 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-6.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-6.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 6"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      K\f0\'fcllerin Alt\f1\u305?nda\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+\{/* Item 7 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-7.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-7.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 7"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      Zaman\u305?n Perdesi \par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+\{/* Item 8 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-8.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-8.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 8"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      G\f0\'f6lgeli Yaz\f1\u305?t\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+\{/* Item 9 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-9.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-9.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 9"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      K\u305?r\u305?k M\f0\'fch\'fcr\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+\{/* Item 10 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-10.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-10.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 10"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      Derin Katman\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+\{/* Item 11 */\}\par
+<div className="group flex-shrink-0 w-[260px]">\par
+\par
+  <div className="overflow-hidden rounded-2xl transition-all duration-500 group-hover:shadow-[0_0_60px_rgba(198,161,91,0.35)]">\par
+\par
+    <img\par
+      src="/archive-11.png"\par
+      onClick=\{() => \{\par
+  setZoomed(false)\par
+  setLoading(true)\par
+\par
+  setTimeout(() => \{\par
+    setSelectedImage("/archive-11.png")\par
+  \}, 900)\par
+\par
+  setTimeout(() => \{\par
+    setLoading(false)\par
+    setZoomed(true)\par
+  \}, 1600)\par
+\}\}\par
+      alt="Archive 11"\par
+      className="w-full transition-all duration-700 group-hover:scale-[1.03] opacity-90"\par
+    />\par
+\par
+  </div>\par
+\par
+  <div className="mt-6 flex flex-col items-center">\par
+\par
+    <div className="text-[#d2cbc2] text-[15px]">\par
+      Sessiz Ta\f1\'balar\par
+    </div>\par
+\par
+    <div className="text-[#6f655c] text-[12px] tracking-[0.2em] uppercase mt-2">\par
+      REMZ Archive\par
+    </div>\par
+\par
+  </div>\par
+\par
+</div>\par
+\par
+  </div>\par
+\par
+ \par
+</section>\par
+\par
+      <footer className="relative z-10 border-t border-[#141414] py-10 px-6 text-center bg-black/30 backdrop-blur-sm">\par
+\par
+  <div className="text-[#6a6259] uppercase tracking-[0.48em] text-[11px] opacity-70 mb-8">\par
+    REMZ \f2\emdash  Archive Access Pending\par
+  </div>\par
+\par
+  <div className="flex justify-center">\par
+    <img\par
+  src="/remz-seal.png"\par
+  alt="REMZ Seal"\par
+  onClick=\{() => setSecretOpen(true)\}\par
+  className="w-[140px] opacity-40 hover:opacity-60 hover:scale-105 transition-all duration-700 cursor-pointer"\par
+/>\par
+  </div>\par
+\par
+  <div className="mt-4 text-[#5f584f] text-[12px] tracking-[0.28em] uppercase opacity-60">\par
+    Baz\f1\u305? s\u305?rlar, yaln\u305?zca sessizli\u287?e emanet edilir.\par
+  </div>\par
+\par
+</footer>\par
+\par
+\par
+\{zoomed && (\par
+  <div className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-xl overflow-x-hidden overflow-y-auto">\par
+    \par
+\par
+\par
+    \{/* Atmosphere */\}\par
+    <video\par
+      autoPlay\par
+      muted\par
+      loop\par
+      playsInline\par
+      className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"\par
+      style=\{\{ mixBlendMode: "screen" \}\}\par
+    >\par
+      <source src="/sis.webm" type="video/webm" />\par
+    </video>\par
+\par
+    \{/* Close */\}\par
+    <button\par
+      onClick=\{() => setZoomed(false)\}\par
+      className="absolute top-8 right-8 z-20 text-[#8b7a67] tracking-[0.35em] uppercase text-xs hover:opacity-60 transition"\par
+    >\par
+      Close\par
+    </button>\par
+\par
+    \{/* Content */\}\par
+<div className="relative z-10 h-screen grid md:grid-cols-2 gap-16 items-center px-10 md:px-24 pt-24 pb-48 transition-all duration-700 overflow-x-hidden">\par
+\par
+\par
+      \{/* Left Image */\}\par
+<div\par
+  onClick=\{() => setZoomed(true)\}\par
+  className="group relative flex justify-center cursor-zoom-in"\par
+>\par
+\par
+  <img\par
+    src=\{selectedImage\}\par
+    alt="REMZ Artifact"\par
+    className="max-h-[82vh] object-contain opacity-95 transition-all duration-700 group-hover:scale-[1.015]"\par
+  />\par
+\par
+  <div\par
+    className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-70 transition-all duration-500 pointer-events-none"\par
+  >\par
+    <svg\par
+      xmlns="http://www.w3.org/2000/svg"\par
+      viewBox="0 0 24 24"\par
+      fill="none"\par
+      stroke="rgb(180,150,110)"\par
+      strokeWidth="1.4"\par
+      className="w-7 h-7"\par
+    >\par
+      <circle cx="11" cy="11" r="7"></circle>\par
+      <line x1="16.65" y1="16.65" x2="21" y2="21"></line>\par
+    </svg>\par
+  </div>\par
+\par
+</div>\par
+\par
+      \{/* Right Content */\}\par
+      <div className="max-w-xl">\par
+\par
+        <div className="uppercase tracking-[0.45em] text-[11px] text-[#6f655c] mb-8">\par
+          REMZ Archive\par
+        </div>\par
+\par
+        <h2 className="text-[42px] md:text-[72px] leading-[0.92] text-[#d6d0c7]">\par
+          \{artifacts[selectedImage]?.title\}\par
+        </h2>\par
+\par
+        <div className="mt-10 w-[120px] h-[1px] bg-[#3a3128]"></div>\par
+\par
+        <p className="mt-10 text-[#81786f] leading-relaxed text-[15px] md:text-[18px]">\par
+          \{artifacts[selectedImage]?.lore\}\par
+        </p>\par
+\par
+        <div className="mt-14 flex items-center gap-8">\par
+\par
+          <button className="border border-[#2a2a2a] bg-black/20 backdrop-blur-sm px-10 py-5 uppercase tracking-[0.32em] text-[11px] text-[#b1a08d] hover:bg-[#111111] hover:border-[#4a4036] transition-all duration-700">\par
+            Archive Entry\par
+          </button>\par
+\par
+          <div className="text-[#5e564e] uppercase tracking-[0.3em] text-[11px]">\par
+            \{artifacts[selectedImage]?.code\}\par
+          </div>\par
+\par
+        </div>\par
+\par
+      </div>\par
+\par
+    </div>\par
+    \{/* Category Strip */\}\par
+\par
+<div\par
+    ref=\{zoomArchiveRef\}\par
+  className="absolute bottom-6 left-0 w-full overflow-x-scroll overflow-y-hidden no-scrollbar z-20"\par
+>\par
+    <div className="flex gap-6 px-6 min-w-max">\par
+\par
+    \{Object.entries(artifacts)\par
+      .filter(([_, item]) => item.category === "garments")\par
+      .map(([image, item]) => (\par
+\par
+        <img\par
+          key=\{image\}\par
+          src=\{image\}\par
+          alt=\{item.title\}\par
+          onClick=\{() => \{\par
+            setZoomed(false)\par
+            setLoading(true)\par
+\par
+            setTimeout(() => \{\par
+              setSelectedImage(image)\par
+            \}, 900)\par
+\par
+            setTimeout(() => \{\par
+              setLoading(false)\par
+              setZoomed(true)\par
+            \}, 1600)\par
+          \}\}\par
+          className="flex-shrink-0 w-[220px] rounded-2xl opacity-55 hover:opacity-100 hover:scale-[1.03] transition-all duration-500 cursor-pointer"\par
+        />\par
+\par
+            ))\}\par
+      \par
+  </div>\par
+</div>\par
+</div>\par
+)\}\par
+\par
+\{secretOpen && (\par
+  <div className="fixed inset-0 z-[999] bg-black/95 backdrop-blur-xl flex items-center justify-center px-6 overflow-hidden">\par
+\par
+    <button\par
+      onClick=\{() => setSecretOpen(false)\}\par
+      className="absolute top-8 right-8 text-[#8b7a64] text-sm tracking-[0.3em] uppercase hover:opacity-70 transition"\par
+    >\par
+      Close\par
+    </button>\par
+\par
+    <div className="text-center max-w-5xl">\par
+      <video\par
+  autoPlay\par
+  muted\par
+  loop\par
+  playsInline\par
+  className="absolute inset-0 w-full h-full object-cover opacity-20 pointer-events-none"\par
+  style=\{\{ mixBlendMode: "screen" \}\}\par
+>\par
+  <source src="/sis.webm" type="video/webm" />\par
+</video>\par
+\par
+      <div className="mb-6 text-[#6f6254] tracking-[0.45em] uppercase text-[11px]">\par
+        Unregistered Artifact\par
+      </div>\par
+\par
+      <img\par
+        src="/hidden-artifact.png"\par
+        alt="Secret Artifact"\par
+        className="max-h-[78vh] mx-auto object-contain opacity-95"\par
+      />\par
+\par
+      <div className="mt-8 text-[#5f584f] tracking-[0.28em] uppercase text-[12px]">\par
+        Accessed Through The REMZ Seal\par
+      </div>\par
+\par
+    </div>\par
+  </div>\par
+  \par
+)\}\par
+\par
+        </div>\par
+        \par
+  </>\par
+  \par
+  )\par
+  \par
+  \par
+  \par
+  \par
+\}\f0\lang31\par
+}
+ 
