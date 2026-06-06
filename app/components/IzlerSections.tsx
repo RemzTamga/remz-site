@@ -600,7 +600,7 @@ group-hover:opacity-[0.24]"
   className="flex gap-10 overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 px-2 no-scrollbar max-w-full"
 >
 
-    {knots[selectedKnot as keyof typeof knots].map((item, index) => (
+    {knots[selectedKnot as keyof typeof knots].map((item: any, index: number) => (
 
       <div
         key={item.image}
