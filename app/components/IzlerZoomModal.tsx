@@ -242,7 +242,7 @@ export default function IzlerZoomModal(props: IzlerZoomModalProps) {
 
 {selectedRoom === "Örtüler" ? (
 
-  coverings[selectedCovering as keyof typeof coverings].map((item) => (
+  coverings[selectedCovering as keyof typeof coverings].map((item: any, index: number) => (
 
   <div
     key={item.image}
@@ -274,7 +274,7 @@ export default function IzlerZoomModal(props: IzlerZoomModalProps) {
 
 ) : selectedRoom === "Düğümler" ? (
 
-  knots[selectedKnot as keyof typeof knots].map((item) => (
+  knots[selectedKnot as keyof typeof knots].map((item: any, index: number) => (
 
   <div
   key={item.image}
@@ -306,7 +306,7 @@ export default function IzlerZoomModal(props: IzlerZoomModalProps) {
 
 ) : selectedRoom === "Başlıklar" ? (
 
-  headwear[selectedHeadwear as keyof typeof headwear].map((item) => (
+  headwear[selectedHeadwear as keyof typeof headwear].map((item: any, index: number) => (
 
     <div
       key={item.image}
