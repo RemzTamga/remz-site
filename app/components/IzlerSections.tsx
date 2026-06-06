@@ -700,7 +700,7 @@ group-hover:opacity-[0.24]"
 
 <div className="flex gap-10 overflow-x-auto overflow-y-hidden snap-x snap-mandatory pb-4 px-2 no-scrollbar max-w-full">
 
-  {headwear[selectedHeadwear as keyof typeof headwear].map((item) => (
+  {headwear[selectedHeadwear as keyof typeof headwear].map((item: any) => (
 
     <div
       key={item.image}
