@@ -33,6 +33,20 @@ type MainHeroProps = {
 export default function MainHero(props: MainHeroProps) {
   const { loading, audioRef, zoomed, secretOpen, gateFocus, openGate, selectedRoom, sealTabs, echoTabs, setOpenGate, setGateFocus, setSelectedSection, setSelectedRoom, setSelectedCovering, setSelectedKnot, setSelectedHeadwear, setSelectedStone, setSelectedSeal, setSelectedEcho, setSelectedImage, setPortalOpen } = props
 
+  const scrollToFeaturedArtifact = () => {
+    const scroll = () => {
+      const target = document.getElementById("featured-artifact")
+      if (!target) return
+
+      const top = target.getBoundingClientRect().top + window.scrollY
+      window.scrollTo({ top, behavior: "smooth" })
+    }
+
+    window.requestAnimationFrame(scroll)
+    window.setTimeout(scroll, 120)
+    window.setTimeout(scroll, 320)
+  }
+
   const openMobileGate = (
     section: string,
     room: string,
@@ -47,10 +61,19 @@ export default function MainHero(props: MainHeroProps) {
     setGateFocus(false)
     extra?.()
 
-    window.scrollTo({
-      top: 900,
-      behavior: "smooth",
-    })
+    scrollToFeaturedArtifact()
+  }
+
+  const touchMobileGate = (
+    event: any,
+    section: string,
+    room: string,
+    image: string,
+    extra?: () => void
+  ) => {
+    event.preventDefault()
+    event.stopPropagation()
+    openMobileGate(section, room, image, extra)
   }
 
   return (
@@ -117,7 +140,7 @@ export default function MainHero(props: MainHeroProps) {
 ></div>
 
 {/* Moving Light */}
-<div className="absolute inset-0 overflow-hidden">
+<div className="absolute inset-0 overflow-hidden pointer-events-none">
 
   <div
     className="absolute -left-[10%] top-0 h-full w-[50%]
@@ -449,6 +472,9 @@ window.scrollTo({
             <div className="grid grid-cols-2 gap-3">
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "izler", "Sessiz Yüzeyler", "/archive-1.png")
+                }
                 onClick={() =>
                   openMobileGate("izler", "Sessiz Yüzeyler", "/archive-1.png")
                 }
@@ -459,6 +485,11 @@ window.scrollTo({
 
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "izler", "Örtüler", "/esarp1.png", () =>
+                    setSelectedCovering("esarplar")
+                  )
+                }
                 onClick={() =>
                   openMobileGate("izler", "Örtüler", "/esarp1.png", () =>
                     setSelectedCovering("esarplar")
@@ -471,6 +502,11 @@ window.scrollTo({
 
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "izler", "Düğümler", "/kravat1.png", () =>
+                    setSelectedKnot("kravatlar")
+                  )
+                }
                 onClick={() =>
                   openMobileGate("izler", "Düğümler", "/kravat1.png", () =>
                     setSelectedKnot("kravatlar")
@@ -483,6 +519,11 @@ window.scrollTo({
 
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "izler", "Başlıklar", "/sapka1.png", () =>
+                    setSelectedHeadwear("sapkalar")
+                  )
+                }
                 onClick={() =>
                   openMobileGate("izler", "Başlıklar", "/sapka1.png", () =>
                     setSelectedHeadwear("sapkalar")
@@ -495,6 +536,11 @@ window.scrollTo({
 
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "kadimtaslar", "Tesbihler", "/tesbih1.png", () =>
+                    setSelectedStone("tesbihler")
+                  )
+                }
                 onClick={() =>
                   openMobileGate("kadimtaslar", "Tesbihler", "/tesbih1.png", () =>
                     setSelectedStone("tesbihler")
@@ -507,6 +553,11 @@ window.scrollTo({
 
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "muhurler", "Objeler", "/obje1.png", () =>
+                    setSelectedSeal("objeler")
+                  )
+                }
                 onClick={() =>
                   openMobileGate("muhurler", "Objeler", "/obje1.png", () =>
                     setSelectedSeal("objeler")
@@ -519,6 +570,11 @@ window.scrollTo({
 
               <button
                 type="button"
+                onTouchEnd={(event) =>
+                  touchMobileGate(event, "yankilar", "Eşsiz", "/yankilar-hukum.png", () =>
+                    setSelectedEcho("essiz")
+                  )
+                }
                 onClick={() =>
                   openMobileGate("yankilar", "Eşsiz", "/yankilar-hukum.png", () =>
                     setSelectedEcho("essiz")
