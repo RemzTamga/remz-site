@@ -51,7 +51,7 @@ export default function MuhurlerSection({
       </div>
 
       <div className="flex gap-6 mb-10 flex-wrap">
-        {sealTabs.map((item) => (
+        {sealTabs.map((item: any) => (
           <button
             key={item.key}
             onClick={() => {
