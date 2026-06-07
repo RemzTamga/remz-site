@@ -1,5 +1,11 @@
 "use client"
 
+type GateTab = {
+  key: string
+  label: string
+  image: string
+}
+
 type MainHeroProps = {
   loading: any
   audioRef: any
@@ -8,8 +14,8 @@ type MainHeroProps = {
   gateFocus: any
   openGate: any
   selectedRoom: any
-  sealTabs: any
-  echoTabs: any
+  sealTabs: GateTab[]
+  echoTabs: GateTab[]
   setOpenGate: any
   setGateFocus: any
   setSelectedSection: any
